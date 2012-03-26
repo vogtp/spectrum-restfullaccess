@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import ch.almana.spectrum.rest.access.BaseModelAccess;
 import ch.almana.spectrum.rest.log.Logger;
+import ch.almana.spectrum.rest.model.SpectrumAttibute;
 
 public class HttpClientRequestHandler implements IRequestHandler {
 
@@ -43,43 +44,17 @@ public class HttpClientRequestHandler implements IRequestHandler {
 		path.append("restful/");
 		path.append(modelAccess.getRestNoun());
 		URL url = new URL(settings.getSpectroServerProtocoll(), settings.getSpectroServerName(), path.toString());
-		return httpClientPost(url.toString(), modelAccess);
+		return httpClientPost(url.toString(), modelAccess.getPostConfig());
 	}
 
-	private String getPostConfig(BaseModelAccess modelAccess) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<rs:alarm-request ");
-		int throttlesize = settings.getThrottlesize();
-		if (throttlesize > 0) {
-			sb.append("throttlesize=\"");
-			sb.append(throttlesize);
-			sb.append("\"");
-		}
-		sb.append(" xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n" +
-				"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-				"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd \">\n");
-		sb.append("\n");
-		for (String attr : modelAccess.getAttributesHandles()) {
-			sb.append("<rs:requested-attribute id=\"");
-			sb.append(attr);
-			sb.append("\" />");
-			sb.append("\n");
-		}
-
-		sb.append("</rs:alarm-request>");
-		sb.append("\n");
-		return sb.toString();
-	}
-
-	protected String httpClientPost(String url, BaseModelAccess modelAccess) throws IOException {
-
+	protected String httpClientPost(String url, PostConfig postConfig) throws IOException {
+		postConfig.setThrottlesize(settings.getThrottlesize());
 		HttpPost post = new HttpPost(url);
 		post.setHeader("Content-Type", "application/xml");
 		post.setHeader("Accept", "application/json");
 
 		try {
-			String postConfig = getPostConfig(modelAccess);
-			HttpEntity entity = new StringEntity(postConfig);
+			HttpEntity entity = new StringEntity(postConfig.getConfig());
 			post.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			Logger.e("Cannot set post data due to wrong encoding", e);
@@ -107,6 +82,7 @@ public class HttpClientRequestHandler implements IRequestHandler {
 			String NL = System.getProperty("line.separator");
 			while ((line = in.readLine()) != null) {
 				sb.append(line + NL);
+				Logger.v(line);
 			}
 			in.close();
 			String page = sb.toString();

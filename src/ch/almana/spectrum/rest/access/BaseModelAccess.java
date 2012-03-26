@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import ch.almana.spectrum.rest.log.Logger;
 import ch.almana.spectrum.rest.model.GenericModel;
 import ch.almana.spectrum.rest.net.IRequestHandler;
+import ch.almana.spectrum.rest.net.PostConfig;
 
 public abstract class BaseModelAccess {
 
@@ -126,6 +127,11 @@ public abstract class BaseModelAccess {
 
 	public long getUpdateTime() {
 		return updateTime;
+	}
+
+	public PostConfig getPostConfig() {
+		PostConfig postConfig = new PostConfig(this);
+		return postConfig;
 	}
 
 }

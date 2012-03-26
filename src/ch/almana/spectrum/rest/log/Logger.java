@@ -6,11 +6,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Date;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 public class Logger {
 	public final static String TAG = "oneTouch";
