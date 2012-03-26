@@ -1,10 +1,8 @@
 package ch.almana.spectrum.rest.net;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
-import ch.almana.spectrum.rest.access.BaseModelAccess;
-import ch.almana.spectrum.rest.model.SpectrumAttibute;
 
 public class PostConfig {
 
@@ -19,7 +17,7 @@ public class PostConfig {
 	}
 	
 	private int throttlesize = Integer.MAX_VALUE;
-	private Set<FilterConfig> filters = new TreeSet<PostConfig.FilterConfig>();
+	private final List<FilterConfig> filters = new ArrayList<PostConfig.FilterConfig>();
 	private Set<String> attributesHandles;
 	private Set<String> entityIds;
 
