@@ -79,5 +79,17 @@ public class AlarmModelAccess extends BaseModelAccess {
 		return ret;
 	}
 
+	public static String severityToString(int severity) {
+		switch (severity) {
+		case 3:
+			return "critical";
+		case 2:
+			return "major";
+		case 1:
+			return "minor";
+		default:
+			return "undefined";
+		}
 
+	}
 }
