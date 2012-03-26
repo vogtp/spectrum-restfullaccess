@@ -13,6 +13,7 @@ import ch.almana.spectrum.rest.model.GenericModel;
 import ch.almana.spectrum.rest.model.SpectrumAttibute;
 import ch.almana.spectrum.rest.net.IRequestHandler;
 import ch.almana.spectrum.rest.net.PostConfig;
+import ch.almana.spectrum.rest.net.PostConfig.FilterComparator;
 
 public abstract class BaseModelAccess {
 
@@ -133,7 +134,8 @@ public abstract class BaseModelAccess {
 	public PostConfig getPostConfig() {
 		PostConfig postConfig = new PostConfig();
 		if (listMode) {
-			postConfig.addFilter(SpectrumAttibute.SEVERITY, "3");
+			postConfig.addFilter(SpectrumAttibute.SEVERITY, "2", FilterComparator.greater_than_or_equals);
+			//postConfig.addFilter(SpectrumAttibute.SEVERITY, "2");
 		} else {
 			postConfig.setAttributes(getAttributesHandles());
 			postConfig.setEntityIds(entityIds);
