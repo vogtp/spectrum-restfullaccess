@@ -28,6 +28,7 @@ public class AlarmModelAccess extends BaseModelAccess {
 	@Override
 	public Set<String> getAttributesHandles() {
 		Set<String> attrs = new TreeSet<String>();
+		attrs.add(SpectrumAttibute.ALARM_ID);
 		if (listMode) {
 			return attrs;
 		}
@@ -48,7 +49,7 @@ public class AlarmModelAccess extends BaseModelAccess {
 	}
 
 	@Override
-	protected Map<String, GenericModel> processData(String payload) {
+	protected Map<String, GenericModel> processData(String payload) throws Exception {
 		Map<String, GenericModel> ret = new HashMap<String, GenericModel>();
 		try {
 			JSONObject all = new JSONObject(payload);
@@ -72,8 +73,8 @@ public class AlarmModelAccess extends BaseModelAccess {
 				ret.put(id, model);
 			}
 		} catch (Exception e) {
-			Logger.e("Cannot parse json for alarms", e);
 			numberOfItems = -1;
+			throw new Exception(e);
 		}
 		return ret;
 	}

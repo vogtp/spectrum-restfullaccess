@@ -1,6 +1,5 @@
 package ch.almana.spectrum.rest.access;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -39,14 +38,14 @@ public abstract class BaseModelAccess {
 
 	public abstract Set<String> getAttributesHandles();
 
-	protected abstract Map<String, GenericModel> processData(String jsonPayload);
+	protected abstract Map<String, GenericModel> processData(String jsonPayload) throws Exception;
 
 	public BaseModelAccess(IRequestHandler requestHandler) {
 		super();
 		this.requestHandler = requestHandler;
 	}
 
-	public Set<String> getList() throws IOException {
+	public Set<String> getList() throws Exception {
 		try {
 			listMode = true;
 			setEntitiesIds(null);
@@ -59,7 +58,7 @@ public abstract class BaseModelAccess {
 		}
 	}
 
-	public Map<String, GenericModel> getEntities(Set<String> ids) throws IOException {
+	public Map<String, GenericModel> getEntities(Set<String> ids) throws Exception {
 		try {
 			listMode = false;
 			setEntitiesIds(ids);
