@@ -1,25 +1,91 @@
 package ch.almana.spectrum.rest.net;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import ch.almana.spectrum.rest.access.BaseModelAccess;
 import ch.almana.spectrum.rest.model.SpectrumAttibute;
 
 public class PostConfig {
 
+	class FilterConfig {
+		String attr;
+		String value;
+		public FilterConfig(String attr, String value) {
+			super();
+			this.attr = attr;
+			this.value = value;
+		}
+	}
+	
+	private int throttlesize = Integer.MAX_VALUE;
+	private Set<FilterConfig> filters = new TreeSet<PostConfig.FilterConfig>();
+	private Set<String> attributesHandles;
+	private Set<String> entityIds;
 
-	private int throttlesize = -1;
-	private BaseModelAccess modelAccess;
-
-
-	public PostConfig(BaseModelAccess modelAccess) {
+	public PostConfig() {
 		super();
-		this.modelAccess = modelAccess;
 	}
 	
 	public void setThrottlesize(int throttlesize) {
-		this.throttlesize = throttlesize;
+		if (throttlesize > 0) {
+			this.throttlesize = throttlesize;
+		}
 	}
 	
-	private static final String ALL_ALARMS_FILTER = "<rs:alarm-request throttlesize=\"10\"\n" + 
+
+	private void addDisplayedAttributes(StringBuilder sb) {
+		if (attributesHandles == null) {
+			return;
+		}
+		for (String attr : attributesHandles) {
+			sb.append("<rs:requested-attribute id=\"");
+			sb.append(attr);
+			sb.append("\" />");
+			sb.append("\n");
+		}
+		sb.append("\n");
+	}
+	
+	private void addRequestHeader(StringBuilder sb) {
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rs:alarm-request ");
+		if (throttlesize > 0) {
+			sb.append("throttlesize=\"");
+			sb.append(throttlesize);
+			sb.append("\"");
+		}
+		sb.append("\n xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+				"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd\">\n");
+		sb.append("\n");
+	}
+	
+	private void addRequestFooter(StringBuilder sb) {
+		sb.append("\n");
+		sb.append("</rs:alarm-request>");
+		sb.append("\n");
+	}
+	
+
+	private void addAttributeFilter(StringBuilder sb) {
+		// FIXME I doubt it works with more than one filter
+		for (FilterConfig filter : filters) {
+			sb.append("<rs:attribute-filter>\n" + 
+					"    <search-criteria xmlns=\"http://www.ca.com/spectrum/restful/schema/filter\">\n" + 
+					"    <filtered-models>\n" + 
+					"      <equals>\n" + 
+					"        <attribute id=\""+filter.attr+"\">\n" + 
+					"          <value>"+filter.value+"</value>\n" + 
+					"        </attribute>\n" + 
+					"      </equals>\n" + 
+					"      </filtered-models>\n" + 
+					"    </search-criteria>\n" + 
+					"  </rs:attribute-filter>\n");
+		}
+		
+	}
+
+
+	private static final String ALL_DEVICE_ALARMS_FILTER = "<rs:alarm-request throttlesize=\"10\"\n" + 
 			"  xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n" + 
 			"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" + 
 			"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd \">\n" + 
@@ -45,79 +111,56 @@ public class PostConfig {
 			"\n" + 
 			"</rs:alarm-request>" +
 			"\n";
-	
-	
-	private String getPostConfig() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rs:alarm-request ");
-		if (throttlesize > 0) {
-			sb.append("throttlesize=\"");
-			sb.append(throttlesize);
-			sb.append("\"");
-		}
-		sb.append("\n xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-				"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd\">\n");
-		sb.append("\n");
-		for (String attr : modelAccess.getAttributesHandles()) {
-			sb.append("<rs:requested-attribute id=\"");
-			sb.append(attr);
-			sb.append("\" />");
-			sb.append("\n");
-		}
-		sb.append("\n");
-
-		sb.append("<rs:attribute-filter>\n" + 
-				"    <search-criteria xmlns=\"http://www.ca.com/spectrum/restful/schema/filter\">\n" + 
-				"    <filtered-models>\n" + 
-				"      <equals>\n" + 
-				"        <attribute id=\""+SpectrumAttibute.SEVERITY+"\">\n" + 
-				"          <value>1</value>\n" + 
-				"        </attribute>\n" + 
-				"      </equals>\n" + 
-				"      </filtered-models>\n" + 
-				"    </search-criteria>\n" + 
-				"  </rs:attribute-filter>\n");
-		
-		sb.append("</rs:alarm-request>");
-		sb.append("\n");
-		return sb.toString();
-	}
-
-	private String getSeverityFilter() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rs:alarm-request ");
-		if (throttlesize > 0) {
-			sb.append("throttlesize=\"");
-			sb.append(throttlesize);
-			sb.append("\"");
-		}
-		sb.append("\n xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-				"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd\">\n");
-		sb.append("\n");
-		
-
-		sb.append("<rs:attribute-filter>\n" + 
-				"    <search-criteria xmlns=\"http://www.ca.com/spectrum/restful/schema/filter\">\n" + 
-				"    <filtered-models>\n" + 
-				"      <equals>\n" + 
-				"        <attribute id=\""+SpectrumAttibute.SEVERITY+"\">\n" + 
-				"          <value>1</value>\n" + 
-				"        </attribute>\n" + 
-				"      </equals>\n" + 
-				"      </filtered-models>\n" + 
-				"    </search-criteria>\n" + 
-				"  </rs:attribute-filter>\n");
-		
-		sb.append("</rs:alarm-request>");
-		sb.append("\n");
-		return sb.toString();
-	}
+	private static final String ALL_ALARMS_FILTER = "<rs:alarm-request throttlesize=\"10\"\n" + 
+			"  xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n" + 
+			"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" + 
+			"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd \">\n" + 
+			"\n" + 
+			"   <!-- \n" + 
+			"         This xml can be posted to the Alarms URL to obtain all alarms\n" + 
+			"         on all devices\n" + 
+			"      -->\n" + 
+			"\n" + 
+			"  <!-- Attributes of Interest -->\n" + 
+			"  <rs:requested-attribute id=\"0x11f53\" />\n" + 
+			"  <rs:requested-attribute id=\"0x10000\" />\n" + 
+			"  <rs:requested-attribute id=\"0x11f56\" />\n" + 
+			"  <rs:requested-attribute id=\"0x12b4c\" />\n" + 
+			"  <rs:requested-attribute id=\"0x11f4d\" />\n" + 
+			"\n" + 
+			"</rs:alarm-request>" +
+			"\n";
 
 
 	public String getConfig() {
-		String pc = getSeverityFilter();
-		System.out.println(pc);
-		return pc;
+		StringBuilder sb = new StringBuilder();
+		addRequestHeader(sb);
+		addDisplayedAttributes(sb);
+		addAttributeFilter(sb);
+		addEntities(sb);
+		addRequestFooter(sb);
+		return sb.toString();
+	}
+
+	private void addEntities(StringBuilder sb) {
+		if (entityIds == null) {
+			return;
+		}
+		for (String entity : entityIds) {
+			sb.append("<rs:alarms id=\"").append(entity).append("\" />\n");
+		}
+	}
+
+	public void addFilter(String attr, String val) {
+		filters.add(new FilterConfig(attr, val));
+	}
+
+	public void setAttributes(Set<String> attributesHandles) {
+		this.attributesHandles = attributesHandles;
+	}
+
+	public void setEntityIds(Set<String> entityIds) {
+		this.entityIds = entityIds;
 	}
 
 }

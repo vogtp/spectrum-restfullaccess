@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import ch.almana.spectrum.rest.log.Logger;
 import ch.almana.spectrum.rest.model.GenericModel;
+import ch.almana.spectrum.rest.model.SpectrumAttibute;
 import ch.almana.spectrum.rest.net.IRequestHandler;
 import ch.almana.spectrum.rest.net.PostConfig;
 
@@ -130,7 +131,13 @@ public abstract class BaseModelAccess {
 	}
 
 	public PostConfig getPostConfig() {
-		PostConfig postConfig = new PostConfig(this);
+		PostConfig postConfig = new PostConfig();
+		if (listMode) {
+			postConfig.addFilter(SpectrumAttibute.SEVERITY,"1");
+		} else {
+			postConfig.setAttributes(getAttributesHandles());
+			postConfig.setEntityIds(entityIds);
+		}
 		return postConfig;
 	}
 
