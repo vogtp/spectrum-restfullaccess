@@ -101,29 +101,4 @@ public class Logger {
 			}
 		}
 	} 
-
-	public static void logIntentExtras(Intent intent) {
-		if (DEBUG) {
-			try {
-				if (intent == null || intent.getExtras() == null) {
-					return;
-				}
-				Bundle extras = intent.getExtras();
-				String action = intent.getAction();
-				StringBuilder sb = new StringBuilder();
-				sb.append("action: ").append(action);
-				for (String key : extras.keySet()) {
-					sb.append(" extra: ").append(key).append(" -> ");
-					sb.append(extras.get(key)).append("\n");
-				}
-				logToFile(sb.toString(), null);
-
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	public static void notImplemented(Context context) {
-		Toast.makeText(context, "Not implemented", Toast.LENGTH_LONG).show();
-	}
 }
