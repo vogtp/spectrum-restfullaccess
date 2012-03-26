@@ -133,7 +133,7 @@ public abstract class BaseModelAccess {
 	public PostConfig getPostConfig() {
 		PostConfig postConfig = new PostConfig();
 		if (listMode) {
-			postConfig.addFilter(SpectrumAttibute.SEVERITY,"1");
+			postConfig.addFilter(SpectrumAttibute.SEVERITY, "3");
 		} else {
 			postConfig.setAttributes(getAttributesHandles());
 			postConfig.setEntityIds(entityIds);
