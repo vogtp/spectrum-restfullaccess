@@ -17,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import ch.almana.spectrum.rest.access.BaseModelAccess;
 import ch.almana.spectrum.rest.log.Logger;
-import ch.almana.spectrum.rest.model.SpectrumAttibute;
 
 public class HttpClientRequestHandler implements IRequestHandler {
 
@@ -38,12 +37,19 @@ public class HttpClientRequestHandler implements IRequestHandler {
 		httpClient.getCredentialsProvider().setCredentials(authscope, creds);
 	}
 
+	@Override
 	public String getPayload(BaseModelAccess modelAccess) throws IOException {
 		StringBuilder path = new StringBuilder();
 		path.append(PATH_SEP).append(settings.getSpectroServerUrlPath()).append(PATH_SEP);
 		path.append("restful/");
 		path.append(modelAccess.getRestNoun());
-		URL url = new URL(settings.getSpectroServerProtocoll(), settings.getSpectroServerName(), path.toString());
+		URL url;
+		int port = settings.getServerPort();
+		if (port > 0) {
+			url = new URL(settings.getSpectroServerProtocoll(), settings.getSpectroServerName(), port, path.toString());
+		} else {
+			url = new URL(settings.getSpectroServerProtocoll(), settings.getSpectroServerName(), path.toString());
+		}
 		return httpClientPost(url.toString(), modelAccess.getPostConfig());
 	}
 

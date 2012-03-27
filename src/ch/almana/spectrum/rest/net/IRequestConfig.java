@@ -12,6 +12,8 @@ public interface IRequestConfig {
 
 	public String getPassword();
 
+	public int getServerPort();
+
 	public int getThrottlesize();
 
 }
