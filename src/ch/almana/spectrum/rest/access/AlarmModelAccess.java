@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ch.almana.spectrum.rest.log.Logger;
@@ -56,7 +57,13 @@ public class AlarmModelAccess extends BaseModelAccess {
 			JSONObject root = all.getJSONObject("ns1.alarm-response-list");
 			parseGernericInformation(root);
 			numberOfItems = Long.parseLong(root.getString("@total-alarms"));
-			JSONArray alarms = root.getJSONObject("ns1.alarm-responses").getJSONArray("ns1.alarm");
+			JSONObject repsonses = root.getJSONObject("ns1.alarm-responses");
+			JSONArray alarms;
+			try {
+				alarms = repsonses.getJSONArray("ns1.alarm");
+			} catch (JSONException e) {
+				alarms = repsonses.getJSONObject("ns1.alarm").getJSONArray("ns1.attribute");
+			}
 			int totAlarm = alarms.length();
 			for (int i = 0; i < totAlarm; i++) {
 				if (listMode) {
