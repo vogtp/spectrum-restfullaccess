@@ -15,6 +15,10 @@ public class Logger {
 	public static final boolean FAKE_DATA = false; // be aware of dynamic data
 
 
+	public static String getVersion(){
+		return "ch.almana.spectrum.rest 0.1";
+	}
+	
 	public static void e(String msg, Throwable t) {
 		try {
 			Log.e(TAG, msg, t);
