@@ -17,6 +17,10 @@ public class GenericModel {
 		return id;
 	}
 
+	public String get(String key){
+		return attributes.get(key);
+	}
+	
 	public Map<String, String> getAttributes() {
 		return attributes;
 	}

@@ -1,5 +1,6 @@
 package ch.almana.spectrum.rest.access;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,9 +14,9 @@ import ch.almana.spectrum.rest.log.Logger;
 import ch.almana.spectrum.rest.model.GenericModel;
 import ch.almana.spectrum.rest.model.SpectrumAttibute;
 import ch.almana.spectrum.rest.net.IRequestHandler;
+import ch.almana.spectrum.rest.net.PostConfig;
 
 public class AlarmModelAccess extends BaseModelAccess {
-
 
 	public AlarmModelAccess(IRequestHandler requestHandler) {
 		super(requestHandler);
@@ -25,19 +26,18 @@ public class AlarmModelAccess extends BaseModelAccess {
 	public String getRestNoun() {
 		return "alarms";
 	}
+	@Override
+	public String getResponseEntityName() {
+		return "alarm";
+	}
 
 	@Override
 	public Set<String> getAttributesHandles() {
 		Set<String> attrs = new TreeSet<String>();
-		attrs.add(SpectrumAttibute.ALARM_ID);
 		if (listMode) {
 			return attrs;
 		}
-
-		//		attrs.add("0x11f53");
-		//		attrs.add("0x10000");
-		//		attrs.add("0x11f56");
-		//		attrs.add("0x11f4d");
+		attrs.add(SpectrumAttibute.ALARM_ID);
 		attrs.add(SpectrumAttibute.SEVERITY);
 		attrs.add(SpectrumAttibute.OCCURENCES);
 		attrs.add(SpectrumAttibute.ACKNOWLEDGED);
@@ -45,46 +45,9 @@ public class AlarmModelAccess extends BaseModelAccess {
 		attrs.add(SpectrumAttibute.CREATION_DATE);
 		attrs.add(SpectrumAttibute.MODEL_NAME);
 		attrs.add(SpectrumAttibute.NETWORK_ADDRESS);
-		//				attrs.add(SpectrumAttibute.);
 		return attrs;
 	}
 
-	@Override
-	protected Map<String, GenericModel> processData(String payload) throws Exception {
-		Map<String, GenericModel> ret = new HashMap<String, GenericModel>();
-		try {
-			JSONObject all = new JSONObject(payload);
-			JSONObject root = all.getJSONObject("ns1.alarm-response-list");
-			parseGernericInformation(root);
-			numberOfItems = Long.parseLong(root.getString("@total-alarms"));
-			JSONObject repsonses = root.getJSONObject("ns1.alarm-responses");
-			JSONArray alarms;
-			try {
-				alarms = repsonses.getJSONArray("ns1.alarm");
-			} catch (JSONException e) {
-				alarms = repsonses.getJSONObject("ns1.alarm").getJSONArray("ns1.attribute");
-			}
-			int totAlarm = alarms.length();
-			for (int i = 0; i < totAlarm; i++) {
-				if (listMode) {
-					Logger.i("Processing alarmid " + i + "/" + totAlarm);
-				} else {
-					Logger.i("Processing alarm " + i + "/" + totAlarm);
-				}
-				JSONObject alarm = alarms.getJSONObject(i);
-				GenericModel model = null;
-				String id = alarm.getString("@id");
-				if (!listMode) {
-					model = new GenericModel(id, parseAttributes(alarm));
-				}
-				ret.put(id, model);
-			}
-		} catch (Exception e) {
-			numberOfItems = -1;
-			throw new Exception(e);
-		}
-		return ret;
-	}
 
 	public static String severityToString(int severity) {
 		switch (severity) {
@@ -99,4 +62,43 @@ public class AlarmModelAccess extends BaseModelAccess {
 		}
 
 	}
+
+	@Override
+	public String getRequestTag() {
+		return "alarm-request";
+	}
+
+	@Override
+	public String getFilterPreamble() {
+		return "<rs:attribute-filter>\n";
+	}
+
+	@Override
+	public String getFilterPostamble() {
+		return "</rs:attribute-filter>\n";
+	}
+
+	@Override
+	public String getPostString() {
+		 return new PostConfig(this).getConfig();
+	}
+
+	@Override
+	protected String getResponseIdName() {
+		return "@id";
+	}
+
+	public Map<String, GenericModel> getAlarmsIdByModelHandle(Set<String> mhs) throws Exception {
+		try {
+			listMode = false;
+			setModelHandles(mhs);
+			jsonPayload = requestHandler.getPayload(this);
+			Logger.i("Processing model data");
+			return processData(jsonPayload);
+		} finally {
+			Logger.i("Finished processing model data");
+		}
+	}
+
+
 }

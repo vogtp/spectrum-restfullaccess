@@ -19,6 +19,7 @@ public class SpectrumAttibute {
 	public static final String NETWORK_ADDRESS = "0x12d7f";
 	public static final String ALARM_TITLE = "0x12b4c";
 	public static final String ALARM_ID = "0x11f9c";
+	public static final String MODEL_HANDLE = "0x129fa";
 	
 	//	public static final String  = "0x";
 	//	public static final String  = "0x";
