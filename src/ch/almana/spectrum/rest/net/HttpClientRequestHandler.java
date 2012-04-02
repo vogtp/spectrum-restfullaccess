@@ -50,17 +50,18 @@ public class HttpClientRequestHandler implements IRequestHandler {
 		} else {
 			url = new URL(settings.getSpectroServerProtocoll(), settings.getSpectroServerName(), path.toString());
 		}
-		return httpClientPost(url.toString(), modelAccess.getPostConfig());
+		return httpClientPost(url.toString(), modelAccess);
 	}
 
-	protected String httpClientPost(String url, PostConfig postConfig) throws IOException {
-		postConfig.setThrottlesize(settings.getThrottlesize());
+	protected String httpClientPost(String url, BaseModelAccess modelAccess) throws IOException {
 		HttpPost post = new HttpPost(url);
 		post.setHeader("Content-Type", "application/xml");
 		post.setHeader("Accept", "application/json");
 
 		try {
-			HttpEntity entity = new StringEntity(postConfig.getConfig());
+			String postString = modelAccess.getPostString();
+			Logger.d("Post data: >"+postString+"<");
+			HttpEntity entity = new StringEntity(postString);
 			post.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			Logger.e("Cannot set post data due to wrong encoding", e);
