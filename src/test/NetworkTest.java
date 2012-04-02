@@ -6,6 +6,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 import ch.almana.spectrum.rest.access.AlarmModelAccess;
+import ch.almana.spectrum.rest.access.AssociationModelAccess;
 import ch.almana.spectrum.rest.access.CollectionModelAccess;
 import ch.almana.spectrum.rest.model.GenericModel;
 import ch.almana.spectrum.rest.model.SpectrumAttibute;
@@ -28,6 +29,7 @@ public class NetworkTest extends TestCase {
 		Set<String> alarmIds = modelAccess.getList();
 		long updateTime = modelAccess.getUpdateTime();
 		Map<String, GenericModel> newAlarms = modelAccess.getEntities(alarmIds);
+		assertTrue(newAlarms.size() > 0);
 	}
 	public void testLoadCollections() throws Exception {
 		CollectionModelAccess cma = new CollectionModelAccess(requestHandler);
@@ -35,6 +37,7 @@ public class NetworkTest extends TestCase {
 		for (GenericModel s : collections.values()) {
 			System.out.println(s.get(SpectrumAttibute.MODEL_NAME)+" "+s.get(SpectrumAttibute.MODEL_HANDLE));
 		}
+		assertTrue(collections.size() > 0);
 //		long updateTime = cma.getUpdateTime();
 //		Map<String, GenericModel> newAlarms = cma.getEntities(alarmIds);
 	}
@@ -46,6 +49,13 @@ public class NetworkTest extends TestCase {
 		mhs.add("0x600b83"); // collection
 		mhs.add("0x600e36"); // host
 		Map<String, GenericModel> alarmIds = modelAccess.getAlarmsIdByModelHandle(mhs);
+		assertTrue(alarmIds.size() > 0);
 	}
 
+	public void testGetAssociationForCollection() throws Exception {
+		AssociationModelAccess ama = new AssociationModelAccess(requestHandler);
+		Set<String> modelsForCollection = ama.getModelsForCollection("0x600b83");
+		assertTrue(modelsForCollection.size() > 0);
+	}
+	
 }

@@ -26,7 +26,7 @@ public abstract class BaseModelAccess {
 
 	protected long throttle = -1;
 
-	protected long numberOfItems = -1;
+//	protected long numberOfItems = -1;
 
 	protected IRequestHandler requestHandler;
 
@@ -95,9 +95,11 @@ public abstract class BaseModelAccess {
 
 	public void parseGernericInformation(JSONObject root) {
 		try {
-			throttle = Long.parseLong(root.getString(JSON_KEY_THROTTLE));
+			String throttleString = root.optString(JSON_KEY_THROTTLE);
+			if (throttleString != null && !"".equals(throttleString.trim()))
+			throttle = Long.parseLong(throttleString);
 		} catch (Exception e) {
-			Logger.e("Cannot get throttle from response", e);
+			Logger.i("Cannot get throttle from response", e);
 			throttle = -1;
 		}
 		// "ns1.link":
@@ -106,7 +108,7 @@ public abstract class BaseModelAccess {
 			try {
 				JSONObject linkInfo = root
 						.getJSONObject(JSON_KEY_MORE_DATA_LINK);
-				if (linkInfo.getString("@rel").equals("next")) {
+				if (linkInfo.optString("@rel").equals("next")) {
 					nextDataUrl = linkInfo.getString("@href");
 				} else {
 					nextDataUrl = null;
@@ -135,7 +137,7 @@ public abstract class BaseModelAccess {
 			JSONObject all = new JSONObject(jsonPayload);
 			JSONObject root = all.getJSONObject("ns1."+entityName+"-response-list");
 			parseGernericInformation(root);
-			numberOfItems = Long.parseLong(root.getString("@total-"+entityName+"s"));
+//			numberOfItems = Long.parseLong(root.getString("@total-"+entityName+"s"));
 			JSONObject repsonses = root.getJSONObject("ns1."+entityName+"-responses");
 			JSONArray entitiess;
 			try {
@@ -159,7 +161,7 @@ public abstract class BaseModelAccess {
 				ret.put(id, model);
 			}
 		} catch (Exception e) {
-			numberOfItems = -1;
+//			numberOfItems = -1;
 			e.printStackTrace();
 			throw new Exception(e);
 		}
@@ -225,6 +227,14 @@ public abstract class BaseModelAccess {
 
 	public void setModelHandles(Set<String> modelHandles) {
 		this.modelHandles = modelHandles;
+	}
+
+	public String getPathParameter() {
+		return null;
+	}
+
+	public boolean doPostRequest() {
+		return true;
 	}
 
 }
