@@ -17,34 +17,6 @@ import ch.almana.spectrum.rest.net.PostConfig;
 
 public class CollectionModelAccess extends BaseModelAccess {
 
-	private static final String COLLECTION_SEARCH = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-			"\n" + 
-			"<rs:model-request throttlesize=\"50000\"\n" + 
-			"  xmlns:rs=\"http://www.ca.com/spectrum/restful/schema/request\"\n" + 
-			"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" + 
-			"  xsi:schemaLocation=\"http://www.ca.com/spectrum/restful/schema/request ../../../xsd/Request.xsd \">\n" + 
-			"\n" + 
-			"    <rs:target-models>\n" + 
-			"      <rs:models-search>\n" + 
-			"        <rs:search-criteria \n" + 
-			"             xmlns=\"http://www.ca.com/spectrum/restful/schema/filter\">\n" + 
-			"          <filtered-models>\n" + 
-			"            <is-derived-from>\n" + 
-			"              <attribute id=\"AttributeID.MTYPE_HANDLE\">\n" + 
-			"                <value>0x10474</value> <!-- Collection -->\n" +
-//				"                <value>0x21000c</value> <!-- RTR_Cisco -->\n" + 
-			"              </attribute>\n" + 
-			"            </is-derived-from>\n" + 
-			"          </filtered-models>\n" + 
-			"        </rs:search-criteria>\n" + 
-			"      </rs:models-search>\n" + 
-			"    </rs:target-models>\n" + 
-			"\n" + 
-			"    <rs:requested-attribute id=\"0x1006e\" />\n" + 
-			"\n" + 
-			"</rs:model-request>";
-
-	
 	public String payload;
 
 	public CollectionModelAccess(IRequestHandler requestHandler) {
@@ -106,9 +78,7 @@ public class CollectionModelAccess extends BaseModelAccess {
 
 	@Override
 	public String getPostString() {
-		// TODO Auto-generated method stub
 		return new PostConfig(this).getConfig();
-	//	return COLLECTION_SEARCH;
 	}
 
 	@Override

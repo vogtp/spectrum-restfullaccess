@@ -39,6 +39,7 @@ public abstract class BaseModelAccess {
 	protected boolean listMode;
 
 	private Set<String> entityIds;
+	private Set<String> modelHandles;
 
 	public abstract String getRestNoun();
 	
@@ -216,6 +217,14 @@ public abstract class BaseModelAccess {
 
 	public boolean isListMode() {
 		return listMode;
+	}
+
+	public Set<String> getModelHandles() {
+		return modelHandles;
+	}
+
+	public void setModelHandles(Set<String> modelHandles) {
+		this.modelHandles = modelHandles;
 	}
 
 }

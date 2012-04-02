@@ -139,8 +139,28 @@ public class PostConfig {
 		addDisplayedAttributes(sb);
 		addAttributeFilter(sb);
 		addEntities(sb);
+		addModelHandles(sb);
 		addRequestFooter(sb);
 		return sb.toString();
+	}
+
+	private void addModelHandles(StringBuilder sb) {
+		Set<String> modelHandles = modelAccess.getModelHandles();
+		if (modelHandles == null){
+			return;
+		}
+		/*
+		 * <rs:target-models>
+      <rs:model mh="0x80007e"/>
+      <rs:model mh="0x400d8a"/>
+    </rs:target-models>
+		 */
+		sb.append("<rs:target-models>\n");
+		for (String mh : modelHandles) {
+			sb.append("  <rs:model mh=\"").append(mh).append("\" />\n");
+		}
+		
+		sb.append("</rs:target-models>\n");
 	}
 
 	private void addEntities(StringBuilder sb) {
@@ -155,10 +175,6 @@ public class PostConfig {
 	public void addFilter(String attr, String val, FilterComparator cmp) {
 		filters.add(new FilterConfig(attr, val, cmp));
 	}
-
-//	public void setAttributes(Set<String> attributesHandles) {
-//		this.attributesHandles = attributesHandles;
-//	}
 
 	public void setEntityIds(Set<String> entityIds) {
 		this.entityIds = entityIds;

@@ -1,5 +1,6 @@
 package ch.almana.spectrum.rest.access;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +17,6 @@ import ch.almana.spectrum.rest.net.IRequestHandler;
 import ch.almana.spectrum.rest.net.PostConfig;
 
 public class AlarmModelAccess extends BaseModelAccess {
-
 
 	public AlarmModelAccess(IRequestHandler requestHandler) {
 		super(requestHandler);
@@ -80,12 +80,25 @@ public class AlarmModelAccess extends BaseModelAccess {
 
 	@Override
 	public String getPostString() {
-		return new PostConfig(this).getConfig();
+		 return new PostConfig(this).getConfig();
 	}
 
 	@Override
 	protected String getResponseIdName() {
 		return "@id";
 	}
+
+	public Map<String, GenericModel> getAlarmsIdByModelHandle(Set<String> mhs) throws Exception {
+		try {
+			listMode = false;
+			setModelHandles(mhs);
+			jsonPayload = requestHandler.getPayload(this);
+			Logger.i("Processing model data");
+			return processData(jsonPayload);
+		} finally {
+			Logger.i("Finished processing model data");
+		}
+	}
+
 
 }
