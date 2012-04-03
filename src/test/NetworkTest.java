@@ -27,7 +27,6 @@ public class NetworkTest extends TestCase {
 		AlarmModelAccess modelAccess = new AlarmModelAccess(requestHandler);
 		
 		Set<String> alarmIds = modelAccess.getList();
-		long updateTime = modelAccess.getUpdateTime();
 		Map<String, GenericModel> newAlarms = modelAccess.getEntities(alarmIds);
 		assertTrue(newAlarms.size() > 0);
 	}
