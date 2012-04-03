@@ -1,7 +1,6 @@
 package ch.almana.spectrum.rest.access;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,14 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.sun.script.javascript.JSAdapter;
-
 import ch.almana.spectrum.rest.log.Logger;
 import ch.almana.spectrum.rest.model.GenericModel;
-import ch.almana.spectrum.rest.model.SpectrumAttibute;
 import ch.almana.spectrum.rest.net.IRequestHandler;
-import ch.almana.spectrum.rest.net.PostConfig;
-import ch.almana.spectrum.rest.net.PostConfig.FilterComparator;
 
 public abstract class BaseModelAccess {
 

@@ -1,14 +1,8 @@
 package ch.almana.spectrum.rest.access;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import ch.almana.spectrum.rest.log.Logger;
 import ch.almana.spectrum.rest.model.GenericModel;
