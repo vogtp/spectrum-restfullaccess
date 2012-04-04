@@ -52,7 +52,7 @@ public class AlarmModelAccess extends BaseModelAccess {
 		case 1:
 			return "minor";
 		default:
-			return "undefined";
+			return "undefined (" + severity + ")";
 		}
 
 	}
