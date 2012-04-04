@@ -57,4 +57,11 @@ public class NetworkTest extends TestCase {
 		assertTrue(modelsForCollection.size() > 0);
 	}
 	
+	// public void testCollectionNameByCollections() throws Exception {
+	// CollectionModelAccess cma = new CollectionModelAccess(requestHandler);
+	// String collectionName = cma.getEntities(null).get("0x600b83")
+	// .get(SpectrumAttibute.MODEL_NAME);
+	// detailDescription = " for collection " + collectionName;
+	// }
+
 }
