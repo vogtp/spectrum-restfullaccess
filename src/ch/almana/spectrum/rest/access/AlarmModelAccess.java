@@ -20,6 +20,7 @@ public class AlarmModelAccess extends BaseModelAccess {
 	public String getRestNoun() {
 		return "alarms";
 	}
+
 	@Override
 	public String getResponseEntityName() {
 		return "alarm";
@@ -51,6 +52,8 @@ public class AlarmModelAccess extends BaseModelAccess {
 			return "major";
 		case 1:
 			return "minor";
+		case 0:
+			return "normal";
 		default:
 			return "undefined (" + severity + ")";
 		}
