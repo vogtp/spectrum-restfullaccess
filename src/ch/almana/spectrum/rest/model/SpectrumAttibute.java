@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpectrumAttibute {
+
+	private static final String NO_VALUE = "";
 	
 	public static final Map<String, String> attributeNames = new HashMap<String, String>();
 	
@@ -20,11 +22,36 @@ public class SpectrumAttibute {
 	public static final String ALARM_TITLE = "0x12b4c";
 	public static final String ALARM_ID = "0x11f9c";
 	public static final String MODEL_HANDLE = "0x129fa";
+
 	
 	//	public static final String  = "0x";
 	//	public static final String  = "0x";
 	//	public static final String  = "0x";
 	//	public static final String  = "0x";
+
+	public static String get(String key) {
+		if (key == null) {
+			return NO_VALUE;
+		}
+		for (String id : attributeNames.keySet()) {
+			String name = attributeNames.get(id);
+			if (key.equals(name)) {
+				return id;
+			}
+		}
+		return NO_VALUE;
+	}
+
+	@Override
+	public String toString() {
+		String ret = "[";
+		for (String id : attributeNames.keySet()) {
+			String name = attributeNames.get(id);
+			ret = ret + name + " -> " + id + " ";
+		}
+		ret += "]";
+		return ret;
+	}
 
 	static {
 		attributeNames.put(MODEL_TYPE_NAME, "MODELTYPE NAME");
