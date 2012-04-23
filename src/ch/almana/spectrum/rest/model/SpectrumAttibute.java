@@ -29,7 +29,7 @@ public class SpectrumAttibute {
 	//	public static final String  = "0x";
 	//	public static final String  = "0x";
 
-	public static String get(String key) {
+	public String get(String key) {
 		if (key == null) {
 			return NO_VALUE;
 		}
