@@ -44,22 +44,6 @@ public class AlarmModelAccess extends BaseModelAccess {
 	}
 
 
-	public static String severityToString(int severity) {
-		switch (severity) {
-		case 3:
-			return "critical";
-		case 2:
-			return "major";
-		case 1:
-			return "minor";
-		case 0:
-			return "normal";
-		default:
-			return "undefined (" + severity + ")";
-		}
-
-	}
-
 	@Override
 	public String getRequestTag() {
 		return "alarm-request";

@@ -53,6 +53,30 @@ public class SpectrumAttibute {
 		return ret;
 	}
 
+	public static String severityToString(String severity) {
+		try {
+			return severityToString(Integer.parseInt(severity));
+		} catch (Exception e) {
+			return severityToString(-1);
+		}
+	}
+
+	public static String severityToString(int severity) {
+		switch (severity) {
+		case 3:
+			return "critical";
+		case 2:
+			return "major";
+		case 1:
+			return "minor";
+		case 0:
+			return "normal";
+		default:
+			return "undefined (" + severity + ")";
+		}
+
+	}
+
 	static {
 		attributeNames.put(MODEL_TYPE_NAME, "MODELTYPE NAME");
 		attributeNames.put(CONDITION, "CONDITION");
